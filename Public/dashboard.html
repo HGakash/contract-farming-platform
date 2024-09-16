@@ -3,9 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <link href="/Public/styles.css" rel="stylesheet">
+    <title>Dashboard - Contract Farming Platform</title>
 </head>
-<body>
-    <h1>welcome to dashboard</h1>
+<body class="bg-gray-100">
+    <header class="bg-green-600 text-white p-4">
+        <div class="flex justify-between items-center">
+            <h1 class="text-2xl font-bold">Dashboard</h1>
+            <a id="logout" href="/Public/logout.html" class="text-white underline">Logout</a>
+        </div>
+    </header>
+    <main class="p-6">
+        <section class="bg-white shadow-md rounded-lg p-6">
+            <h2 class="text-xl font-bold mb-4">Welcome, <span id="userName">User</span></h2>
+            <h2 class="text-xl font-bold mb-4">So you are, <span id="userrole">role</span></h2>
+            <div id="roleSpecificContent">
+                <!-- Role-based content will be injected here -->
+            </div>
+            <div class="mt-6">
+                <!-- opening form for contract creation -->
+                <!-- <a href="/Public/contract.html" class="bg-blue-500 text-white py-2 px-4 rounded">Create New Contract</a> -->
+            </div> 
+            <!-- form link for farmer registration -->
+            <div class="mt-6">
+            <a href="register-farmer.html" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Farmer Register</a>
+            </div>
+            <div  class="mt-6">
+                <a href="farmer-list.html" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">View Farmers</a>
+            </div>
+        </section>
+    </main>
+
+    <script src="/Public/js/dashboard.js"></script>
 </body>
 </html>

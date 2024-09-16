@@ -1,65 +1,76 @@
 const express = require('express');
-const router = express.Router();
-const User = require('../User');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const User = require('../User');
+const router = express.Router();
+require('dotenv').config(); // Load environment variables
 
-// Signup Route
+// Sign Up Route
 router.post('/signup', async (req, res) => {
-  const { name, email, password,role } = req.body;
+    const { name, email, password, role } = req.body;
+    try {
+        // Hash password
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-  try {
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: 'User already exists' });
+        // Create new user
+        const newUser = new User({ name, email, password: hashedPassword, role });
+        await newUser.save();
+
+        res.status(201).json({ message: 'User created successfully' });
+    } catch (error) {
+        console.error('Error during signup:', error);
+        res.status(500).json({ message: 'Error creating user' });
     }
-
-    // Ensure password and salt rounds are provided
-    if (!password) {
-      return res.status(400).json({ message: 'Password is required' });
-    }
-
-    const saltRounds = 10; // Define salt rounds
-    const hashedPassword = await bcrypt.hash(password, saltRounds); // Pass both password and salt rounds
-
-    const newUser = new User({
-      name,
-      email,
-      password: hashedPassword,
-      role,
-    });
-
-    await newUser.save();
-    console.log('user Created:',newUser);
-    res.status(201).json({ message: 'User created successfully' });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: 'Server error' });
-  }
 });
 
-//login
+// Login Route
 router.post('/login', async (req, res) => {
-    console.log('Login Request Body:', req.body); // Log the incoming request
-  
     const { email, password, role } = req.body;
-  
     try {
-      const user = await User.findOne({ email, role }); // Check both email and role
-      if (!user) {
-        return res.status(400).json({ message: 'User not found or role mismatch' });
-      }
-  
-      const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) {
-        return res.status(400).json({ message: 'Invalid credentials' });
-      }
-  
-      console.log('User Logged In:', user); // Log user details upon successful login
-      res.status(200).json({ message: 'Login successful' });
-    } catch (error) {
-      console.error('Login Error:', error); // Log any errors
-      res.status(500).json({ message: 'Server error' });
-    }
-  });
+        const user = await User.findOne({ email, role });
+        if (!user) return res.status(400).json({ message: 'Invalid credentials' });
 
-module.exports = router;
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
+
+        // Create JWT token
+        const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+        res.json({ token });
+    } catch (error) {
+        console.error('Error during login:', error);
+        res.status(500).json({ message: 'Error logging in' });
+    }
+});
+
+//Middleware to verify token
+const verifyToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    if (!authHeader) return res.status(401).json({ message: 'No token provided' });
+
+    const token = authHeader.split(' ')[1]; // This will remove the 'Bearer ' prefix
+    if (!token) return res.status(401).json({ message: 'No token provided' });
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        if (err) return res.status(403).json({ message: 'Failed to authenticate token' });
+        req.userId = decoded.id;
+        next();
+    });
+};
+
+// Protected Route
+router.get('/me', verifyToken, async (req, res) => {
+    try {
+        console.log('hitting');
+        const user = await User.findById(req.userId);
+        console.log('User ID from token:', req.userId);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+        console.log('User fetched from DB:', user);
+        res.json({ name: user.name, email: user.email, role: user.role });
+    } catch (error) {
+        console.error('Error fetching user:', error);
+        res.status(500).json({ message: 'Error fetching user' });
+    }
+});
+
+module.exports = { router, verifyToken };

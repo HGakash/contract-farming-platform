@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Contract</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto py-10">
+        <h1 class="text-3xl font-bold mb-8">Create Contract</h1>
+
+        <form id="contractForm" class="bg-white shadow-md rounded-lg p-6">
+            <!-- Farmer Information (Pre-filled) -->
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="farmerName">
+                    Farmer Name
+                </label>
+                <input type="text" id="farmerName" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" disabled>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="farmerProduce">
+                    Farmer Produce
+                </label>
+                <input type="text" id="farmerProduce" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" disabled>
+            </div>
+
+            <!-- Dealer Information (To be filled manually) -->
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="companyName">
+                    Company Name
+                </label>
+                <input type="text" id="companyName" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="contractDetails">
+                    Contract Details
+                </label>
+                <textarea id="contractDetails" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="5" required></textarea>
+            </div>
+
+            <!-- Contract Dates -->
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="startDate">
+                    Start Date
+                </label>
+                <input type="date" id="startDate" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="endDate">
+                    End Date
+                </label>
+                <input type="date" id="endDate" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            </div>
+
+            <!-- Contract Duration (calculated dynamically in years) -->
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="durationYears">
+                    Contract Duration
+                </label>
+                <input type="text" id="durationYears" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" disabled>
+            </div>
+
+            <!-- Error Message (Hidden initially) -->
+            <div id="errorMessage" class="text-red-500 text-sm mb-4 hidden">
+                Please make sure all fields are filled correctly and the end date is after the start date.
+            </div>
+
+            <button class="bg-blue-500 text-white px-4 py-2 rounded" type="submit">
+                Submit Contract
+            </button>
+        </form>
+    </div>
+
+    <script>
+        // Function to extract query parameters from the URL
+        function getQueryParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                farmerId: params.get('farmerId'),
+                farmerName: params.get('farmerName'),
+                farmerProduce: params.get('farmerProduce')
+            };
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const { farmerName, farmerProduce } = getQueryParams();
+            // Pre-fill farmer details in the form
+            document.getElementById('farmerName').value = decodeURIComponent(farmerName);
+            document.getElementById('farmerProduce').value = decodeURIComponent(farmerProduce);
+
+            // Add form validation and duration calculation
+            const form = document.getElementById('contractForm');
+            const errorMessage = document.getElementById('errorMessage');
+            const durationYearsInput = document.getElementById('durationYears');
+
+            function calculateDuration(start, end) {
+                const startDate = new Date(start);
+                const endDate = new Date(end);
+                const timeDiff = endDate - startDate;
+
+                // Calculate years between start and end dates (365.25 days per year for leap years)
+                const years = timeDiff / (1000 * 3600 * 24 * 365.25);
+                return years >= 0 ? years.toFixed(2) : null;
+            }
+
+            function updateDuration() {
+                const startDate = document.getElementById('startDate').value;
+                const endDate = document.getElementById('endDate').value;
+
+                if (startDate && endDate) {
+                    const years = calculateDuration(startDate, endDate);
+                    if (years !== null) {
+                        durationYearsInput.value = years + " years";
+                    } else {
+                        durationYearsInput.value = "";
+                    }
+                } else {
+                    durationYearsInput.value = "";
+                }
+            }
+
+            document.getElementById('startDate').addEventListener('change', updateDuration);
+            document.getElementById('endDate').addEventListener('change', updateDuration);
+
+            form.addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent form submission
+
+                const companyName = document.getElementById('companyName').value.trim();
+                const contractDetails = document.getElementById('contractDetails').value.trim();
+                const startDate = document.getElementById('startDate').value;
+                const endDate = document.getElementById('endDate').value;
+
+                // Validate form fields
+                if (!companyName || !contractDetails || !startDate || !endDate || (endDate < startDate)) {
+                    errorMessage.classList.remove('hidden');
+                } else {
+                    errorMessage.classList.add('hidden');
+                    
+                    // Simulate form submission
+                    console.log({
+                        farmerName: document.getElementById('farmerName').value,
+                        farmerProduce: document.getElementById('farmerProduce').value,
+                        companyName: companyName,
+                        contractDetails: contractDetails,
+                        startDate: startDate,
+                        endDate: endDate,
+                        duration: durationYearsInput.value
+                    });
+
+                    alert("Contract submitted successfully!");
+                }
+            });
+        });
+    </script>
+</body>
+</html>
