@@ -9,13 +9,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         farmers.forEach(farmer => {
             const farmerCard = `
-            <div class="bg-white shadow-md rounded-lg p-4">
-                <h2 class="text-xl font-semibold mb-2">Farmer Name: ${farmer.name}</h2>
-                <p><strong>Location:</strong> ${farmer.location}</p>
-                <p><strong>Produce:</strong> ${farmer.produce}</p>
-                <p><strong>Experience:</strong> ${farmer.experience} years</p>
-                <p><strong>Contact:</strong> ${farmer.contact}</p>
-                <button class="mt-4 bg-blue-500 text-white px-4 py-2 rounded" 
+            <div class="card p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-bold mb-2 text-white">Farmer Name: ${farmer.name}</h2>
+                <p class="text-white"><span class="font-bold">Location:</span>  ${farmer.location}</p>
+                <p class="text-white"><span class="font-bold">Produce:</span> ${farmer.produce}</p>
+                <p class="text-white"><span class="font-bold">Experience:</span> ${farmer.experience} years</p>
+                <p class="text-white"><span class="font-bold">Contact:</span> ${farmer.contact}</p>
+                <button class="button mt-4 bg-blue-500 text-white px-4 py-2 rounded" 
                     onclick="createContract('${farmer._id}', '${farmer.name}', '${farmer.produce}')">
                     Create Contract
                 </button>

@@ -20,7 +20,7 @@ app.use(express.json());
 //serve static files from public directory
 app.use(express.static(path.join(__dirname,'Public')));
 
-//use route
+//use route for authRoute
 app.use('/api', authRoute.router);
 
 // Use farmer routess
@@ -38,8 +38,10 @@ mongoose.connect('mongodb://localhost:27017/contract_farming')
 
 // Test route
 app.get('/', (req, res) => {
-  res.send('API is working!');
+  res.sendFile(path.join(__dirname, '/Public/index.html'));
 });
+
+
 
 app.listen(PORT, () => {
   console.log(`server running on the port ${PORT}`);

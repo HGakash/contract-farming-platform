@@ -30,64 +30,15 @@ router.post('/create', async (req, res) => {
 // Fetch all pending contracts for a specific farmer
 
 router.get('/farmer/contracts', authenticateJWT, async (req, res) => {
-    const farmerId = req.farmerId;  // Retrieved from JWT middleware
-
+    console.log('pending hitted');
+    const farmerId = '66e7ee8ffd3a73548f47f2b7';  // Retrieved from JWT middleware
+    console.log(farmerId);
     try {
         const pendingContracts = await Contract.find({ farmerId, status: 'pending' });
         res.json(pendingContracts);
     } catch (error) {
         console.error('Error fetching contracts:', error);
         res.status(500).json({ error: 'Failed to fetch contracts' });
-    }
-});
-
-// Accept a contract
-router.patch('/contracts/:contractId/accept', authenticateJWT, async (req, res) => {
-    const contractId = req.params.contractId;
-    const farmerId = req.farmerId;
-
-    try {
-        const contract = await Contract.findById(contractId);
-        if (!contract) {
-            return res.status(404).json({ error: 'Contract not found' });
-        }
-
-        if (contract.farmerId.toString() !== farmerId) {
-            return res.status(403).json({ error: 'Unauthorized to accept this contract' });
-        }
-
-        contract.status = 'accepted';
-        await contract.save();
-
-        res.json({ message: 'Contract accepted successfully' });
-    } catch (error) {
-        console.error('Error accepting contract:', error);
-        res.status(500).json({ error: 'Failed to accept contract' });
-    }
-});
-
-// Reject a contract
-router.patch('/contracts/:contractId/reject', authenticateJWT, async (req, res) => {
-    const contractId = req.params.contractId;
-    const farmerId = req.farmerId;
-
-    try {
-        const contract = await Contract.findById(contractId);
-        if (!contract) {
-            return res.status(404).json({ error: 'Contract not found' });
-        }
-
-        if (contract.farmerId.toString() !== farmerId) {
-            return res.status(403).json({ error: 'Unauthorized to reject this contract' });
-        }
-
-        contract.status = 'rejected';
-        await contract.save();
-
-        res.json({ message: 'Contract rejected successfully' });
-    } catch (error) {
-        console.error('Error rejecting contract:', error);
-        res.status(500).json({ error: 'Failed to reject contract' });
     }
 });
 

@@ -2,7 +2,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const contractsList = document.getElementById('contractsList');
 
     // Fetch JWT token from localStorage
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem('token'); //authtoken
+    console.log(token);
     if (!token) {
         alert("Please log in first.");
         window.location.href = '/login';  // Redirect to login if no token found
@@ -11,7 +12,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Fetch pending contracts for the farmer
     try {
-        const response = await fetch('/api/farmer/contracts', {
+        const response = await fetch('http://localhost:3000/contracts/farmer/contracts', {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,  // Include token in request headers
@@ -33,19 +34,40 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Display each contract
         contracts.forEach(contract => {
             const contractDiv = document.createElement('div');
-            contractDiv.className = "bg-white shadow-md rounded-lg p-6";
+            contractDiv.className = "bg-white p-6 rounded-lg shadow-lg mb-6 border border-gray-200 floating-box";
 
             contractDiv.innerHTML = `
-                <p><strong>Company Name:</strong> ${contract.companyName}</p>
-                <p><strong>Contract Details:</strong> ${contract.contractDetails}</p>
-                <p><strong>Price Per Unit:</strong> $${contract.pricePerUnit}</p>
-                <p><strong>Start Date:</strong> ${new Date(contract.startDate).toLocaleDateString()}</p>
-                <p><strong>End Date:</strong> ${new Date(contract.endDate).toLocaleDateString()}</p>
-                <p><strong>Duration:</strong> ${contract.duration} years</p>
+                <div class="bg-green-100 p-4 rounded-t-lg rounded-b-lg">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-green-200 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-building text-green-700"></i>
+                        </div>
+                        <div>
+                            <p class="text-lg font-semibold">${contract.companyName}</p>
+                            <p class="text-sm text-gray-500">Dealer</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-4">
+                    <p class="mb-2"><strong>Contract Details:</strong> ${contract.contractDetails}</p>
+                    <p class="mb-2"><strong>Price Per Unit:</strong> ${contract.pricePerUnit}</p>
+                    <p class="mb-2"><strong>Start Date:</strong> ${new Date(contract.startDate).toLocaleDateString()}</p>
+                    <p class="mb-2"><strong>End Date:</strong> ${new Date(contract.endDate).toLocaleDateString()}</p>
+                    <p class="mb-4"><strong>Duration:</strong> ${contract.duration} years</p>
 
-                <div class="mt-4">
-                    <button onclick="acceptContract('${contract._id}')" class="bg-green-500 text-white px-4 py-2 rounded">Accept</button>
-                    <button onclick="rejectContract('${contract._id}')" class="bg-red-500 text-white px-4 py-2 rounded ml-2">Reject</button>
+                    <div class="flex justify-between items-center">
+                        <div class="flex space-x-4">
+                            <button onclick="acceptContract('${contract._id}')" class="bg-green-500 text-white px-6 py-2 rounded-lg shadow hover:bg-green-600 transition duration-200 flex items-center">
+                                <i class="fas fa-check mr-2"></i> Accept
+                            </button>
+                            <button onclick="rejectContract('${contract._id}')" class="bg-red-500 text-white px-6 py-2 rounded-lg shadow hover:bg-red-600 transition duration-200 flex items-center">
+                                <i class="fas fa-times mr-2"></i> Reject
+                            </button>
+                        </div>
+                        <button class="bg-gray-500 text-white px-6 py-2 rounded-lg shadow hover:bg-gray-600 transition duration-200 flex items-center">
+                            <i class="fas fa-arrow-left mr-2"></i> Back
+                        </button>
+                    </div>
                 </div>
             `;
 
@@ -57,54 +79,3 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-// Function to accept a contract
-async function acceptContract(contractId) {
-    const token = localStorage.getItem('authToken');
-
-    try {
-        const response = await fetch(`/api/contracts/${contractId}/accept`, {
-            method: 'PATCH',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        });
-
-        if (response.ok) {
-            alert('Contract accepted successfully!');
-            location.reload();  // Reload the page to refresh the contract list
-        } else {
-            const errorData = await response.json();
-            alert('Error: ' + errorData.error);
-        }
-    } catch (error) {
-        console.error('Error accepting contract:', error);
-        alert('An error occurred while accepting the contract.');
-    }
-}
-
-// Function to reject a contract
-async function rejectContract(contractId) {
-    const token = localStorage.getItem('authToken');
-
-    try {
-        const response = await fetch(`/api/contracts/${contractId}/reject`, {
-            method: 'PATCH',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        });
-
-        if (response.ok) {
-            alert('Contract rejected successfully!');
-            location.reload();  // Reload the page to refresh the contract list
-        } else {
-            const errorData = await response.json();
-            alert('Error: ' + errorData.error);
-        }
-    } catch (error) {
-        console.error('Error rejecting contract:', error);
-        alert('An error occurred while rejecting the contract.');
-    }
-}
