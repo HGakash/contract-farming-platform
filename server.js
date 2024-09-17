@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const authRoute = require('./src/models/routes/authRoute');
 const farmerRoute = require('./src/models/routes/farmerRoute'); // Import farmer route
-
+const contractRoutes = require('./src/models/routes/contractRoute');
 //cross origin
 const cors = require('cors');
 const path = require('path');
@@ -25,6 +25,9 @@ app.use('/api', authRoute.router);
 
 // Use farmer routess
 app.use('/api/farmers', farmerRoute);
+
+//creating contracts
+app.use('/contracts', contractRoutes);
 
 // Connect to MongoDB
 mongoose.connect('mongodb://localhost:27017/contract_farming')

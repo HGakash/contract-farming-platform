@@ -1,160 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Contract</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
-<body class="bg-gray-100">
-    <div class="container mx-auto py-10">
-        <h1 class="text-3xl font-bold mb-8">Create Contract</h1>
-
-        <form id="contractForm" class="bg-white shadow-md rounded-lg p-6">
-            <!-- Farmer Information (Pre-filled) -->
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="farmerName">
-                    Farmer Name
-                </label>
-                <input type="text" id="farmerName" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" disabled>
+<body class="bg-gradient-to-r from-green-200 via-green-300 to-green-400">
+    <div class="max-w-4xl mx-auto mt-10 p-8 bg-white rounded-lg shadow-lg">
+        <h1 class="text-3xl font-bold mb-8 text-green-700 text-center">Create Contract</h1>
+        <form id="contractForm">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="mb-4">
+                    <label class="block text-green-700 text-sm font-bold mb-2" for="farmerName">Farmer Name</label>
+                    <input class="shadow appearance-none border border-green-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-green-500" id="farmerName" type="text" disabled>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-green-700 text-sm font-bold mb-2" for="farmerProduce">Farmer Produce</label>
+                    <input class="shadow appearance-none border border-green-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-green-500" id="farmerProduce" type="text" disabled>
+                </div>
+<!-- Dealer Information (To be filled manually) -->
+                <div class="mb-4">
+                    <label class="block text-green-700 text-sm font-bold mb-2" for="companyName">Company Name</label>
+                    <input class="shadow appearance-none border border-green-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-green-500" id="companyName" type="text">
+                </div>
+<!-- price per unit -->
+                <div class="mb-4">
+                    <label class="block text-green-700 text-sm font-bold mb-2" for="pricePerUnit">Price per Unit</label>
+                    <input type="number" id="pricePerUnit" step="0.01" class="shadow appearance-none border border-green-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-green-500" required>
+                </div>
+                <div class="mb-4 col-span-2">
+                    <label class="block text-green-700 text-sm font-bold mb-2" for="contractDetails">Contract Details</label>
+                    <textarea class="shadow appearance-none border border-green-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-green-500" id="contractDetails" rows="5" required></textarea>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-green-700 text-sm font-bold mb-2" for="startDate">Start Date</label>
+                    <div class="relative">
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="startDate" type="date" placeholder="dd-mm-yyyy" required>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-green-700 text-sm font-bold mb-2" for="endDate">End Date</label>
+                    <div class="relative">
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="endDate" type="date" placeholder="dd-mm-yyyy" required>
+                 </div>
+                </div>
+                <div class="mb-4 col-span-2">
+                    <label class="block text-green-700 text-sm font-bold mb-2" for="durationYears">Contract Duration</label>
+                    <input class="shadow appearance-none border border-green-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-green-500" id="durationYears" type="text" disabled>
+                </div>
             </div>
-
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="farmerProduce">
-                    Farmer Produce
-                </label>
-                <input type="text" id="farmerProduce" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" disabled>
-            </div>
-
-            <!-- Dealer Information (To be filled manually) -->
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="companyName">
-                    Company Name
-                </label>
-                <input type="text" id="companyName" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-            </div>
-
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="contractDetails">
-                    Contract Details
-                </label>
-                <textarea id="contractDetails" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="5" required></textarea>
-            </div>
-
-            <!-- Contract Dates -->
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="startDate">
-                    Start Date
-                </label>
-                <input type="date" id="startDate" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-            </div>
-
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="endDate">
-                    End Date
-                </label>
-                <input type="date" id="endDate" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-            </div>
-
-            <!-- Contract Duration (calculated dynamically in years) -->
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="durationYears">
-                    Contract Duration
-                </label>
-                <input type="text" id="durationYears" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" disabled>
-            </div>
-
-            <!-- Error Message (Hidden initially) -->
+<!-- Error Message (Hidden initially) -->
             <div id="errorMessage" class="text-red-500 text-sm mb-4 hidden">
                 Please make sure all fields are filled correctly and the end date is after the start date.
             </div>
-
-            <button class="bg-blue-500 text-white px-4 py-2 rounded" type="submit">
-                Submit Contract
-            </button>
+            <div class="flex items-center justify-center">
+                <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded focus:outline-none focus:shadow-outline" type="submit">
+                    Submit Contract
+                </button>
+            </div>
         </form>
     </div>
-
-    <script>
-        // Function to extract query parameters from the URL
-        function getQueryParams() {
-            const params = new URLSearchParams(window.location.search);
-            return {
-                farmerId: params.get('farmerId'),
-                farmerName: params.get('farmerName'),
-                farmerProduce: params.get('farmerProduce')
-            };
-        }
-
-        document.addEventListener("DOMContentLoaded", () => {
-            const { farmerName, farmerProduce } = getQueryParams();
-            // Pre-fill farmer details in the form
-            document.getElementById('farmerName').value = decodeURIComponent(farmerName);
-            document.getElementById('farmerProduce').value = decodeURIComponent(farmerProduce);
-
-            // Add form validation and duration calculation
-            const form = document.getElementById('contractForm');
-            const errorMessage = document.getElementById('errorMessage');
-            const durationYearsInput = document.getElementById('durationYears');
-
-            function calculateDuration(start, end) {
-                const startDate = new Date(start);
-                const endDate = new Date(end);
-                const timeDiff = endDate - startDate;
-
-                // Calculate years between start and end dates (365.25 days per year for leap years)
-                const years = timeDiff / (1000 * 3600 * 24 * 365.25);
-                return years >= 0 ? years.toFixed(2) : null;
-            }
-
-            function updateDuration() {
-                const startDate = document.getElementById('startDate').value;
-                const endDate = document.getElementById('endDate').value;
-
-                if (startDate && endDate) {
-                    const years = calculateDuration(startDate, endDate);
-                    if (years !== null) {
-                        durationYearsInput.value = years + " years";
-                    } else {
-                        durationYearsInput.value = "";
-                    }
-                } else {
-                    durationYearsInput.value = "";
-                }
-            }
-
-            document.getElementById('startDate').addEventListener('change', updateDuration);
-            document.getElementById('endDate').addEventListener('change', updateDuration);
-
-            form.addEventListener('submit', function(event) {
-                event.preventDefault(); // Prevent form submission
-
-                const companyName = document.getElementById('companyName').value.trim();
-                const contractDetails = document.getElementById('contractDetails').value.trim();
-                const startDate = document.getElementById('startDate').value;
-                const endDate = document.getElementById('endDate').value;
-
-                // Validate form fields
-                if (!companyName || !contractDetails || !startDate || !endDate || (endDate < startDate)) {
-                    errorMessage.classList.remove('hidden');
-                } else {
-                    errorMessage.classList.add('hidden');
-                    
-                    // Simulate form submission
-                    console.log({
-                        farmerName: document.getElementById('farmerName').value,
-                        farmerProduce: document.getElementById('farmerProduce').value,
-                        companyName: companyName,
-                        contractDetails: contractDetails,
-                        startDate: startDate,
-                        endDate: endDate,
-                        duration: durationYearsInput.value
-                    });
-
-                    alert("Contract submitted successfully!");
-                }
-            });
-        });
-    </script>
+<script src = "js/create-contract.js"></script>
 </body>
 </html>

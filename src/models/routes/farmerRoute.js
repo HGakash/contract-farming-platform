@@ -17,7 +17,7 @@ router.post('/', async (req, res, next) => {
         res.status(500).json({ message: 'Error registering farmer' });
     }
 });
-
+//only use '/'
 router.get('/', async (req, res) => {
     try {
         const farmers = await Farmer.find({});
