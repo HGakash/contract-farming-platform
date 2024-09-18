@@ -60,10 +60,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             contractsList.appendChild(contractDiv);
         });
-    } catch (error) {
+    }/* catch (error) {
         console.error('Error fetching contracts:', error);
         contractsList.innerHTML = '<p class="text-red-500">Failed to load contracts. Please try again later.</p>';
-    }
+    }*/
+        catch (error) {
+            console.error('Error fetching contracts:', error);
+            contractsList.innerHTML = `
+                <div id="error-message" class="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+                    <p class="font-semibold">Failed to load contracts. Please try again later.</p>
+                </div>
+            `;
+        }
 });
 
 async function acceptContract(contractId) {

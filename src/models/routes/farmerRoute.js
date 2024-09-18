@@ -28,12 +28,20 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/:id',async (req,res,next)=>{
-    console.log('hitting');
-    const {id} = req.params;
-    const farmer = await Farmer.findById(id);
-    res.json({name:farmer.name});
-})
+router.get('/:farmerId', async (req, res) => {
+    try {
+        console.log('iam hitted');
+        const farmer = await Farmer.findById(req.params.farmerId);
+        if (farmer) {
+            res.json(farmer); // Return the farmer object if found
+        } else {
+            res.status(404).json({ message: 'Farmer not found' });
+        }
+    } catch (error) {
+        console.error('Error fetching farmer:', error);
+        res.status(500).json({ message: 'Error fetching farmer' });
+    }
+});
 
 
 module.exports = router;
