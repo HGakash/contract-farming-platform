@@ -34,7 +34,7 @@ mongoose.connect('mongodb://localhost:27017/contract_farming')
   .then(() => console.log('MongoDB connected'))
   .catch((err) => console.log('MongoDB connection error:', err));
 
-//auth route
+
 
 // Test route
 app.get('/', (req, res) => {

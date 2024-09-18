@@ -28,5 +28,12 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/:id',async (req,res,next)=>{
+    console.log('hitting');
+    const {id} = req.params;
+    const farmer = await Farmer.findById(id);
+    res.json({name:farmer.name});
+})
+
 
 module.exports = router;
