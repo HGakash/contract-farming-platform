@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', async function () {
     const token = localStorage.getItem('token');
+    let status = `<span class="text-green-600 font-bold" style="border-radius: 5px; padding: 2px 5px; background-color: #c6f7d0;">Accepted</span>`;
     if (!token) {
         alert('You must be logged in to view this page.');
         window.location.href = '/Public/login.html';
@@ -40,6 +41,9 @@ document.addEventListener('DOMContentLoaded', async function () {
                         <td class="py-2 px-4 pr-4 pl-0 border-b">${contract.contractDetails}</td>
                         <td class="py-2 px-4 pr-4 pl-4 border-b">${new Date(contract.startDate).toLocaleDateString()}</td>
                         <td class="py-2 px-4 pr-4 pl-4 border-b">${new Date(contract.endDate).toLocaleDateString()}</td>
+                        <td class="py-2 px-4 pr-4 pl-4 border-b">${status}</td>
+
+
                     </tr>
                 `).join('');
             }

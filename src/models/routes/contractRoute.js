@@ -28,14 +28,24 @@ router.post('/create', async (req, res) => {
 
 // Fetch all pending contracts for a specific farmer
 router.get('/farmer/contracts', async (req, res) => {
-    const farmerId = '66e7ee8ffd3a73548f47f2b7';  // Placeholder for farmer ID
+    const arr =  ['66eb2e3fb3cab7127e79b3df','66e7ee8ffd3a73548f47f2b7','66eb2ecdb3cab7127e79b3e7'];
+    
+    for(let i = 0;i<arr.length;i++){
+        
+        let farmerId = arr[i];
+             
     try {
         const pendingContracts = await Contract.find({ farmerId, status: 'pending' });
         res.json(pendingContracts);
+        if(pendingContracts){
+            break;
+        }
     } catch (error) {
         console.error('Error fetching contracts:', error);
         res.status(500).json({ error: 'Failed to fetch contracts' });
     }
+    
+}
 });
 
 // Route to accept a contract
