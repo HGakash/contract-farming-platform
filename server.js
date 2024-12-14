@@ -1,48 +1,51 @@
 const express = require('express');
 const mongoose = require('mongoose');
+// Correct import for newer Web3 versions
 const authRoute = require('./src/models/routes/authRoute');
-const farmerRoute = require('./src/models/routes/farmerRoute'); // Import farmer route
+const farmerRoute = require('./src/models/routes/farmerRoute');
 const contractRoutes = require('./src/models/routes/contractRoute');
-//cross origin
 const cors = require('cors');
 const path = require('path');
 
 const app = express();
 
-//use cors to allow request from the frontend
-app.use(cors());
-
-const PORT = 3000;
-
 // Middleware
+app.use(cors());
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'Public')));
 
-//serve static files from public directory
-app.use(express.static(path.join(__dirname,'Public')));
 
-//use route for authRoute
+// Routes
 app.use('/api', authRoute.router);
-
-// Use farmer routess
 app.use('/api/farmers', farmerRoute);
-
-//creating contracts
 app.use('/contracts', contractRoutes);
 
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/contract_farming')
-  .then(() => console.log('MongoDB connected'))
-  .catch((err) => console.log('MongoDB connection error:', err));
-
-
+// MongoDB Connection
+mongoose.connect('mongodb://localhost:27017/contract_farming', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log('MongoDB connected'))
+.catch((err) => console.log('MongoDB connection error:', err));
 
 // Test route
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '/Public/index.html'));
 });
 
-
-
-app.listen(PORT, () => {
-  console.log(`server running on the port ${PORT}`);
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
 });
+
+// Server setup
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
+// Export for potential testing
+module.exports = app;
+
+

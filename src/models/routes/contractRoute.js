@@ -28,7 +28,7 @@ router.post('/create', async (req, res) => {
 
 // Fetch all pending contracts for a specific farmer
 router.get('/farmer/contracts', async (req, res) => {
-    const arr =  ['66eb2e3fb3cab7127e79b3df','66e7ee8ffd3a73548f47f2b7','66eb2ecdb3cab7127e79b3e7'];
+    const arr =  ['675c8ca60e5eaa456329848b','675cc40c8afc51b4158b35ec'];
     
     for(let i = 0;i<arr.length;i++){
         
